@@ -8,7 +8,7 @@ class Query
 
     function __construct($name)
     {
-
+        $this->setName($name);
     }
 
     /**

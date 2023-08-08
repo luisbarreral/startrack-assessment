@@ -16,18 +16,22 @@ class MyDB
   function exec($query)
   {
     $this->last_error = null;
+    $rows_afected = 0;
     try {
-      return $this->file_db->exec($query);
+      $rows_afected = $this->file_db->exec($query);
     } catch (PDOException $e) {
       $this->last_error = $e->getMessage();
+      $rows_afected = 0;
     }
+    return $rows_afected;
   }
 
   function query($query)
   {
     $this->last_error = null;
     try {
-      return $this->file_db->query($query);
+      $stmt = $this->file_db->query($query);
+      return $stmt->fetchAll();
     } catch (PDOException $e) {
       $this->last_error = $e->getMessage();
     }
