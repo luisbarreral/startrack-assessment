@@ -82,10 +82,23 @@ function query()
     
                 if ($query_data->getState()) {
                     $response->setCode(200);
+
+                    $data_rows = $query_data->getData();
+                    $final_data = array();
+
+                    foreach ($data_rows as $row) {
+                        $clean_data = array(
+                            'query' => $row['name'],
+                            'date_time' => $row['created_at']
+                        );
+                        $final_data[] = $clean_data;    
+                    }
+
                     $result = array(
                         'frequency' => sizeof($query_data->getData()),
-                        'data' => $query_data->getData()
+                        'data' => $final_data
                     );
+                    
                     $json_data = json_encode($result);
                     $cache_handler->setCacheData($key, $json_data);
                     $response->setData($result);

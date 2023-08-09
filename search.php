@@ -55,7 +55,7 @@ function search()
 
         $response->setData($result->getData());
         $response->setMessage($result->getMessage());
-        $response->setStatus($response->getStatus());
+        $response->setStatus($result->getState());
 
         echo json_encode($response, JSON_PRETTY_PRINT);
         return;
