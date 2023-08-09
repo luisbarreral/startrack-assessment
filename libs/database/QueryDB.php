@@ -39,7 +39,7 @@ class QueryDB
      * @param Query $query
      * @return Result
      */
-    function createQuery($query)
+    function insertQuery($query)
     {
         $result = new Result();
         try {

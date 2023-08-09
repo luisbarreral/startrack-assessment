@@ -27,15 +27,16 @@ class Request
         );
 
         $response = curl_exec($curl);
+        $response = json_decode($response, true);
         $response_info = curl_getinfo($curl);        
 
         $res = new Result();
         if ($response_info['http_code'] >= 200 && $response_info['http_code'] <= 299) {
-            $res->setData(json_decode($response, true));
+            $res->setData($response);
             $res->setState(true);
         } else {
             $res->setState(false);
-            $res->setMessage("ERROR: " . curl_error($curl));
+            $res->setMessage("ERROR: " . $response['error_name'] . ' ' . $response['error_message'] );
         }
 
         curl_close($curl);

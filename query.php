@@ -1,39 +1,15 @@
 <?php
 require_once "libs/Response.php";
-require_once "libs/Caller.php";
+require_once "libs/Query.php";
+require_once "libs/QueryDB.php";
 header('Content-Type: application/json');
-function search()
+function query()
 {
     $response = new Response();
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $page = '';
-        $page_size = '';
-        $query = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        if (!array_key_exists('page', $_GET)) {
-            http_response_code(500);
-            $response->setCode(500);
-            $response->setMessage("ERROR: page parameter not found.");
-            $response->setStatus(false);
-            echo json_encode($response, JSON_PRETTY_PRINT);
-            return;
-        }
-
-        $page = $_GET['page'];
-
-        if (!array_key_exists('size', $_GET)) {
-            http_response_code(500);
-            $response->setCode(500);
-            $response->setMessage("ERROR: size parameter not found.");
-            $response->setStatus(false);
-            echo json_encode($response, JSON_PRETTY_PRINT);
-            return;
-        }
-
-        $page_size = $_GET['size'];
-
-        if (!array_key_exists('query', $_GET)) {
+        if (!array_key_exists('query', $_POST)) {
             http_response_code(500);
             $response->setCode(500);
             $response->setMessage("ERROR: query parameter not found.");
@@ -42,10 +18,31 @@ function search()
             return;
         }
 
-        $query = $_GET['query'];
+        $query = $_POST['query'];
 
-        $caller = new Caller();
-        $result = $caller->call($page, $page_size, $query);
+        if (!array_key_exists('init_date', $_POST)) {
+            http_response_code(500);
+            $response->setCode(500);
+            $response->setMessage("ERROR: init_date parameter not found.");
+            $response->setStatus(false);
+            echo json_encode($response, JSON_PRETTY_PRINT);
+            return;
+        }
+
+        $init_date = $_POST['init_date'];
+
+        if (!array_key_exists('final_date', $_POST)) {
+            http_response_code(500);
+            $response->setCode(500);
+            $response->setMessage("ERROR: init_final_datedate parameter not found.");
+            $response->setStatus(false);
+            echo json_encode($response, JSON_PRETTY_PRINT);
+            return;
+        }
+
+        $final_date = $_POST['final_date'];
+        
+        $result = new Result();
 
         if($result->getState()){
             $response->setCode(200);
@@ -71,5 +68,5 @@ function search()
     
 }
 
-search();
+query();
 ?>
