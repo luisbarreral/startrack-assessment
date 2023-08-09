@@ -2,8 +2,8 @@
 $currentDirectory = dirname(__FILE__);
 $upperDirectory = dirname($currentDirectory);
 include_once "MyDB.php";
-include_once $upperDirectory . '/' ."Query.php";
-include_once $upperDirectory . '/' ."Result.php";
+include_once $upperDirectory . '/' . "Query.php";
+include_once $upperDirectory . '/' . "Result.php";
 
 class QueryDB
 {
@@ -42,6 +42,7 @@ class QueryDB
     function insertQuery($query)
     {
         $result = new Result();
+
         try {
             $created_at = date(self::FORMAT);
             $name = $query->getName();
@@ -52,26 +53,42 @@ class QueryDB
             if ($this->my_db->last_error != null) {
                 $result->setState(false);
                 $result->setMessage($this->my_db->last_error);
-            }else{
+            } else {
                 $result->setState(true);
                 $result->setMessage($inserted . " lines inserted");
                 $result->setData($inserted);
             }
+
         } catch (Exception $ex) {
             $result->setState(false);
             $result->setMessage($ex->getMessage());
         }
+
         return $result;
     }
 
-    function getQueryFromName($name)
+    function getQueryFromName($name, $init_date, $final_date)
     {
         $result = new Result();
+
         try {
+            $sql = "SELECT name, created_at FROM QUERY WHERE name = '$name' AND created_at BETWEEN '$init_date' AND '$final_date'";
+            $data_result = $this->my_db->query($sql);
+            
+            if ($this->my_db->last_error != null) {
+                $result->setState(false);
+                $result->setMessage($this->my_db->last_error);
+            } else {
+                $result->setState(true);
+                $result->setMessage("DATA OBTAINED.");
+                $result->setData($data_result);
+            }
 
         } catch (Exception $ex) {
-
+            $result->setState(false);
+            $result->setMessage($ex->getMessage());
         }
+
         return $result;
     }
 }

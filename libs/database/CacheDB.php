@@ -37,6 +37,7 @@ class CacheDB
     public function insertCache(Cache $cache)
     {
         $result = new Result();
+
         try {
             $key = $cache->getKey();
             $data = $cache->getData();
@@ -53,21 +54,24 @@ class CacheDB
                 $result->setMessage($inserted . " lines inserted");
                 $result->setData($inserted);
             }
+
         } catch (Exception $ex) {
             $result->setState(false);
             $result->setMessage($ex->getMessage());
         }
+
         return $result;
     }
 
     public function updateCache(Cache $cache)
     {
         $result = new Result();
+
         try {
             $key = $cache->getKey();
             $data = $cache->getData();
             $time = time();
-            $sql = "UPDATE CACHE SET data = '$data', time = '$time
+            $sql = "UPDATE CACHE SET data = '$data', time = '$time'
                     WHERE key = '$key'";
             $updated = $this->my_db->exec($sql);
 
@@ -79,31 +83,37 @@ class CacheDB
                 $result->setMessage($updated . " lines updated");
                 $result->setData($updated);
             }
+
         } catch (Exception $ex) {
             $result->setState(false);
             $result->setMessage($ex->getMessage());
         }
+
         return $result;
     }
 
     public function getCacheFromKey($key)
     {
         $result = new Result();
+
         try {
             $sql = "SELECT * FROM CACHE where key = '$key'";
             $data_result = $this->my_db->query($sql);
+
             if ($this->my_db->last_error != null) {
                 $result->setState(false);
                 $result->setMessage($this->my_db->last_error);
             } else {
                 $result->setState(true);
-                $result->setMessage("DATA OBTAIN.");
+                $result->setMessage("DATA OBTAINED.");
                 $result->setData($data_result);
             }
+
         } catch (Exception $ex) {
             $result->setState(false);
             $result->setMessage($ex->getMessage());
         }
+
         return $result;
     }
 }
